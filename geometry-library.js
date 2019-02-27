@@ -21,8 +21,8 @@ console.log(calcRhomboidArea(1, 2, 3));
 console.log(calcRhomboidPeri(1, 2, 3));
 console.log(calcRegPolygonArea(1, 5));
 console.log(calcRegPolygonPeri(1, 5));
-console.log(calcRightSolidVolume(1, 1));
-console.log(calcRightSolidSurfAr(1, 1));
+console.log(calcRightSolidVolume(1, 2, 3));
+console.log(calcRightSolidSurfAr(1, 2, 3));
 console.log(calcRightCylinderVolume(1, 1));
 console.log(calcRightCylinderSurfAr(1, 1));
 console.log(calcUniformPrismVolume(1, 4));
@@ -34,32 +34,36 @@ console.log(calcRightPrismSurfAr(1, 4, 2));
 /* CIRCLES, ELLIPSES, ETC *************************************************************************************** */
 
 function calcCircleArea(radius) {
-    area = PI * radius ** 2;
-
-    if (area === 0) {
+    if (radius <= 0) {
         area = null;
+    }
+
+    else {
+        area = PI * radius ** 2;
     }
 
     return area;
 }
 
 function calcCirclePeri(radius) { // technically circumference, here peri for consistency
-    perimeter = 2 * PI * radius;
-
-    if (perimeter === 0) {
+    if (radius <= 0) {
         perimeter = null;
+    }
+
+    else {
+        perimeter = 2 * PI * radius;
     }
 
     return perimeter;
 }
 
 function calcAnnulusArea(outerRadius, innerRadius) {
-    let areaOuter = calcCircleArea(outerRadius);
-    let areaInner = calcCircleArea(innerRadius);
-    area = areaOuter - areaInner;
-
-    if (area <= 0) {
+    if (outerRadius <= 0 || innerRadius <= 0 || outerRadius < innerRadius) {
         area = null;
+    }
+    
+    else {
+        area = PI * (outerRadius ** 2 - innerRadius ** 2); 
     }
 
     return area;
@@ -70,130 +74,124 @@ function calcAnnulusArea(outerRadius, innerRadius) {
 /* TRIANGLES ************************************************************************************************** */
 
 function calcRightTriangleArea(cathetus1, cathetus2) {
-    area = 0.5 * (cathetus1 * cathetus2);
-    
-    if (area === 0) {
+    if (cathetus1 <= 0 || cathetus2 <= 0) {
         area = null;
+    }
+    
+    else {
+        area = 0.5 * (cathetus1 * cathetus2);
     }
     
     return area;
 }
 
-function calcRightTrianglePeri(cathetus1, cathetus2, hypothenuse){
-    if (hypothenuse == undefined) {
-        hypothenuse = (cathetus1 ** 2 + cathetus2 ** 2) ** 0.5;
-    }
-    perimeter = cathetus1 + cathetus2 + hypothenuse;
-    
-    if (perimeter === 0) {
+function calcRightTrianglePeri(cathetus1, cathetus2){
+    if (cathetus1 <= 0 || cathetus2 <= 0) {
         perimeter = null;
+    }
+
+    else {
+        let hypothenuse = (cathetus1 ** 2 + cathetus2 ** 2) ** 0.5;
+        perimeter = cathetus1 + cathetus2 + hypothenuse;
     }
 
     return perimeter;
 }
 
 function calcEquilateralTriangleArea(side) {
-    area = 0.25 * (3 ** 0.5) * side;
-    
-    if (area === 0) {
+    if (side <= 0) {
         area = null;
+    }
+
+    else {
+        area = 0.25 * (3 ** 0.5) * side;
     }
     
     return area;
 }
 
 function calcEquilateralTrianglePeri(side) {
-    perimeter = 3 * side;
-    
-    if (perimeter === 0) {
+    if (side <= 0) {
         perimeter = null;
+    }
+
+    else {
+        perimeter = 3 * side;
     }
 
     return perimeter;
 }
 
 function calcIsoscelesTriangleArea(equalSide, differentSide) {
-    height = (equalSide ** 2 - (0.5 * differentSide) ** 2) ** 0.5;
-    area = 0.5 * (height * differentSide);
-    
-    if (area === 0) {
+    if (equalSide <= 0 || differentSide <= 0) {
         area = null;
+    }
+
+    else {
+        let height = (equalSide ** 2 - (0.5 * differentSide) ** 2) ** 0.5;
+        area = 0.5 * (height * differentSide);
     }
     
     return area;
 }
 
 function calcIsoscelesTrianglePeri (equalSide, differentSide) {
-    perimeter = 2 * equalSide + differentSide;
-    
-    if (perimeter === 0) {
+    if (equalSide <= 0 || differentSide <= 0) {
         perimeter = null;
+    }
+
+    else {
+        perimeter = 2 * equalSide + differentSide;
     }
 
     return perimeter;
 }
 
 function calcTriangleArea() {
+    if (arguments[0] <= 0 || arguments[1] <= 0 || arguments[2] <= 0 || arguments.length > 3) {
+        area = null;
+    }
     // if only one value, it assumes it's equilateral
-    if (arguments.length === 1) {
-        area = calcEquilateralTriangleArea(arguments[0]);
-        return area;
+    else if (arguments.length === 1) {
+        area = 0.25 * (3 ** 0.5) * arguments[0];
     }
 
-    // if two values, it assumes it's isosceles
+    // if two values, it assumes it's isosceles and the first value is for the equal sides
     else if(arguments.length === 2) {
-        area = calcIsoscelesTrianglePeri(arguments[0], arguments[1]);
-        return area;
+        let height = (arguments[0] ** 2 - (0.5 * arguments[1]) ** 2) ** 0.5;
+        area = 0.5 * (height * arguments[1]);
     }
 
     // if three values, it uses Heron's formula
     else if(arguments.length === 3) {
-        semiperimeter = (arguments[0] + arguments[1] + arguments[2]) / 2;
-        area = (semiperimeter * (semiperimeter - arguments[0]) * (semiperimeter - arguments[1]) * (semiperimeter - arguments[2])) ** 0.5;
-        
-        if (area === 0) {
-            area = null;
-        }
-
-        return area;
+        let semiperimeter = (arguments[0] + arguments[1] + arguments[2]) / 2;
+        area = (semiperimeter * (semiperimeter - arguments[0]) * (semiperimeter - arguments[1])
+        * (semiperimeter - arguments[2])) ** 0.5;
     }
 
-    else {
-        area = null;
-        return area;
-    }
-
+    return area;
 }
 
 function calcTrianglePeri() {
-    // if only one value is entered, it assumes it's equilateral
-    if (arguments.length === 1) {
-        perimeter = calcEquilateralTrianglePeri(arguments[0]);
-        return perimeter;
+    if (arguments[0] <= 0 || arguments[1] <= 0 || arguments[2] <= 0 || arguments.length > 3) {
+        perimeter = null;
+    }
+    // if only one value, it assumes it's equilateral
+    else if (arguments.length === 1) {
+        perimeter = 3 * arguments[0];    
     }
 
-    // if two values are entered, it assumes it's isosceles
+    // if two values, it assumes it's isosceles and the first value is for the equal sides
     else if(arguments.length === 2) {
-        perimeter = calcIsoscelesTrianglePeri(arguments[0], arguments[1]);
-        return perimeter;
+        perimeter = 2 * arguments[0] + arguments[1];
     }
 
-    // if three values are entered, it adds them up
+    // if three values, it adds them up
     else if(arguments.length === 3) {
         perimeter = arguments[0] + arguments[1] + arguments[2];
-        
-        if (perimeter === 0) {
-            perimeter = null;
-        }
-
-        return perimeter;
     }
 
-    // if no values or more than 3 values are entered, the result is null
-    else {
-        perimeter = null;
-        return perimeter;
-    }
+    return perimeter;
 }
 
 
@@ -201,56 +199,70 @@ function calcTrianglePeri() {
 /* QUADRILATERALS ********************************************************************************************** */
 
 function calcSquareArea(side) {
-    area = side ** 2;
-    
-    if (area === 0) {
+    if (side <= 0) {
         area = null;
+    }
+
+    else {
+        area = side ** 2;
     }
     
     return area;
 }
 
 function calcSquarePeri(side) {
-    perimeter = 4 * side;
-    
-    if (perimeter === 0) {
-        perimeter = null;
+    if (side <= 0) {
+        area = null;
+    }
+
+    else {
+        perimeter = 4 * side;
     }
 
     return perimeter;
 }
 
 function calcRectangleArea(side1, side2) {
-    area = side1 * side2;
-    
-    if (area === 0) {
+    if (side1 <= 0 || side2 <= 0) {
         area = null;
+    }
+
+    else {
+        area = side1 * side2;
     }
     
     return area;
 }
 
 function calcRectanglePeri(side1, side2) {
-    perimeter = 2 * (side1 + side2);
-    
-    if (perimeter === 0) {
+    if (side1 <= 0 || side2 <= 0) {
         perimeter = null;
+    }
+    
+    else {
+        perimeter = 2 * (side1 + side2);
     }
 
     return perimeter;
 }
 
-function calcRhombusArea(diagonal1, diagonal1) {
-    area = diagonal1 * diagonal1;
-    
-    if (area === 0) {
+function calcRhombusArea(diagonal1, diagonal2) {
+    if (diagonal1 <= 0 || diagonal2 <= 0) {
         area = null;
     }
-    
+
+    else {
+        area = diagonal1 * diagonal2;
+    }
+
     return area;
 }
 
 function calcRhombusPerimeter() {
+    if (arguments[0] <= 0 || arguments[1] <= 0 || arguments.length > 2) {
+        perimeter = null;
+    }
+
     // if only one value, it assumes it's the side
     if (arguments.length === 1) {
         perimeter = 4 * arguments[0];
@@ -258,36 +270,32 @@ function calcRhombusPerimeter() {
 
     // if two values, it assumes they're the diagonals
     else if (arguments.length === 2) {
-        side = (0.5 * arguments[0] + 0.5 * arguments[1]) ** 0.5;
+        let side = (0.5 * arguments[0] + 0.5 * arguments[1]) ** 0.5;
         perimeter = 4 * side;
-    }
-
-    else {
-        perimeter = null;
-    }
-
-    if (perimeter === 0) {
-        perimeter = null;
     }
 
     return perimeter;
 }
 
-function calcRhomboidArea(base, side, height) {
-    area = base * height;
-    
-    if (area === 0) {
+function calcRhomboidArea(base, height) {
+    if (base <= 0 || height <= 0) {
         area = null;
+    }
+
+    else {
+        area = base * height;
     }
     
     return area;
 }
 
-function calcRhomboidPeri(base, side, height) {
-    perimeter = 2 * (base + side);
-
-    if (perimeter === 0) {
+function calcRhomboidPeri(base, side) {
+    if (base <= 0 || side <= 0) {
         perimeter = null;
+    }
+
+    else {
+        perimeter = 2 * (base + side);
     }
 
     return perimeter;
@@ -298,20 +306,24 @@ function calcRhomboidPeri(base, side, height) {
 /* REGULAR POLYGONS ******************************************************************************************** */
 
 function calcRegPolygonArea(sideLength, sideNumber) {
-    area = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
-    
-    if (area === 0) {
+    if (sideLength <= 0 || sideNumber < 3 || sideNumber % 1 !== 0) {
         area = null;
+    }
+
+    else {
+        area = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
     }
 
     return area;
 }
 
 function calcRegPolygonPeri(sideLength, sideNumber) {
-    perimeter = sideLength * sideNumber;
-
-    if (perimeter === 0) {
+    if (sideLength <= 0 || sideNumber < 3 || sideNumber % 1 !== 0) {
         perimeter = null;
+    }
+
+    else {
+        perimeter = sideLength * sideNumber;
     }
 
     return perimeter;
@@ -322,62 +334,106 @@ function calcRegPolygonPeri(sideLength, sideNumber) {
 /* RIGHT CYLINDERS AND PRISMS */
 
 function calcRightSolidVolume(baseArea, height) {
-    volume = baseArea * height;
-
-    if(volume === 0) {
+    if (baseArea <= 0 || height <= 0) {
         volume = null;
+    }
+
+    else {
+        volume = baseArea * height;
     }
 
     return volume;
 }
 
-function calcRightSolidSurfAr(baseArea, sideArea) {
-    surfaceArea = 2 * baseArea + sideArea;
-
-    if(surfaceArea === 0) {
+function calcRightSolidSurfAr(baseArea, basePerimeter, height) {
+    if (baseArea <= 0 || basePerimeter <= 0 || height <= 0) {
         surfaceArea = null;
+    }
+
+    else {
+        surfaceArea = 2 * baseArea + basePerimeter * height;
     }
 
     return surfaceArea;
 }
 
 function calcRightCylinderVolume(radius, height) {
-    baseArea = calcCircleArea(radius);
-    volume = calcRightSolidVolume(baseArea, height);
+    if (radius <= 0 || height <= 0) {
+        volume = null;
+    }
+
+    else {
+        let baseArea = PI * radius ** 2;
+        let basePerimeter = 2 * PI * radius;
+        volume = 2 * baseArea + basePerimeter * height;
+    }
+
     return volume;
 }
 
 function calcRightCylinderSurfAr(radius, height) {
-    baseArea = calcCircleArea(radius);
-    basePeri = calcCirclePeri(radius);
-    sideArea = calcRectangleArea(basePeri, height);
-    surfaceArea = calcRightSolidSurfAr(baseArea, sideArea);
+    if (radius <= 0 || height <= 0) {
+        surfaceArea = null;
+    }
+
+    else {
+        let baseArea = PI * radius ** 2;
+        let basePerimeter = 2 * PI * radius;
+        surfaceArea = 2 * baseArea + basePerimeter * height;
+    }
     return surfaceArea;
 }
 
 function calcUniformPrismVolume(sideLength, sideNumber) {
-    baseArea = calcRegPolygonArea(sideLength, sideNumber);
-    volume = calcRightSolidVolume(baseArea, sideLength);
+    if (sideLength <= 0 || sideNumber < 3 || sideNumber % 1 !== 0) {
+        volume = null;
+    }
+
+    else {
+        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
+        volume = baseArea * sideLength;
+    }
+
     return volume;
 }
 
 function calcUniformPrismSurfAr(sideLength, sideNumber) {
-    baseArea = calcRegPolygonArea(sideLength, sideNumber);
-    sideArea = calcSquareArea(sideLength) * sideNumber;
-    surfaceArea = calcRightSolidSurfAr(baseArea, sideArea);
+    if (sideLength <= 0 || sideNumber < 3 || sideNumber % 1 !== 0) {
+        surfaceArea = null;
+    }
+
+    else {
+        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
+        let basePerimeter = sideLength * sideNumber;
+        surfaceArea = 2 * baseArea + basePerimeter * sideLength;
+    }
+
     return surfaceArea;
 }
 
 function calcRightPrismVolume(sideLength, sideNumber, height) {
-    baseArea = calcRegPolygonArea(sideLength, sideNumber);
-    volume = calcRightSolidVolume(baseArea, height);
+    if (sideLength <= 0 || sideNumber < 3 || sideNumber % 1 !== 0 || height <= 0) {
+        volume = null;
+    }
+
+    else {
+        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
+        volume = baseArea * height;
+    }
+
     return volume;
 }
 
 function calcRightPrismSurfAr(sideLength, sideNumber, height) {
-    baseArea = calcRegPolygonArea(sideLength, sideNumber);
-    sideArea = calcRectangleArea(sideLength, height) * sideNumber;
-    surfaceArea = calcRightSolidSurfAr(baseArea, sideArea);
+    if (sideLength <= 0 || sideNumber < 3 || sideNumber % 1 !== 0 || height <= 0) {
+        surfaceArea = null;
+    }
+
+    else {
+        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
+        let basePerimeter = sideLength * sideNumber;
+        surfaceArea = 2 * baseArea + basePerimeter * height;
+    }
+
     return surfaceArea;
 }
-
