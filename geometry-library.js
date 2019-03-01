@@ -1,8 +1,8 @@
-const PI = Math.PI;
-
 console.log(calcCircleArea(1));
 console.log(calcCirclePeri(1));
 console.log(calcAnnulusArea(2, 1));
+console.log(calcSphereVolume(1));
+console.log(calcSphereSurfAr(1));
 console.log(calcRightTriangleArea(1, 2));
 console.log(calcRightTrianglePeri(1, 2));
 console.log(calcEquilateralTriangleArea(1));
@@ -39,7 +39,7 @@ function calcCircleArea(radius) {
     }
 
     else {
-        area = PI * radius ** 2;
+        area = Math.PI * radius ** 2;
     }
 
     return area;
@@ -51,7 +51,7 @@ function calcCirclePeri(radius) { // technically circumference, here peri for co
     }
 
     else {
-        perimeter = 2 * PI * radius;
+        perimeter = 2 * Math.PI * radius;
     }
 
     return perimeter;
@@ -63,10 +63,34 @@ function calcAnnulusArea(outerRadius, innerRadius) {
     }
     
     else {
-        area = PI * (outerRadius ** 2 - innerRadius ** 2); 
+        area = Math.PI * (outerRadius ** 2 - innerRadius ** 2); 
     }
 
     return area;
+}
+
+function calcSphereVolume(radius) {
+    if (radius <= 0) {
+        perimeter = null;
+    }
+
+    else {
+        volume = 4 / 3 * Math.PI * radius ** 3;
+    }
+
+    return volume;
+}
+
+function calcSphereSurfAr(radius) {
+    if (radius <= 0) {
+        perimeter = null;
+    }
+
+    else {
+        surfaceArea = 4 * Math.PI * radius ** 2;
+    }
+
+    return surfaceArea;
 }
 
 
@@ -311,7 +335,7 @@ function calcRegPolygonArea(sideLength, sideNumber) {
     }
 
     else {
-        area = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
+        area = (sideLength ** 2 * sideNumber) / (4 * Math.tan(Math.PI / sideNumber));
     }
 
     return area;
@@ -363,8 +387,8 @@ function calcRightCylinderVolume(radius, height) {
     }
 
     else {
-        let baseArea = PI * radius ** 2;
-        let basePerimeter = 2 * PI * radius;
+        let baseArea = Math.PI * radius ** 2;
+        let basePerimeter = 2 * Math.PI * radius;
         volume = 2 * baseArea + basePerimeter * height;
     }
 
@@ -377,8 +401,8 @@ function calcRightCylinderSurfAr(radius, height) {
     }
 
     else {
-        let baseArea = PI * radius ** 2;
-        let basePerimeter = 2 * PI * radius;
+        let baseArea = Math.PI * radius ** 2;
+        let basePerimeter = 2 * Math.PI * radius;
         surfaceArea = 2 * baseArea + basePerimeter * height;
     }
     return surfaceArea;
@@ -390,7 +414,7 @@ function calcUniformPrismVolume(sideLength, sideNumber) {
     }
 
     else {
-        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
+        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(Math.PI / sideNumber));
         volume = baseArea * sideLength;
     }
 
@@ -403,7 +427,7 @@ function calcUniformPrismSurfAr(sideLength, sideNumber) {
     }
 
     else {
-        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
+        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(Math.PI / sideNumber));
         let basePerimeter = sideLength * sideNumber;
         surfaceArea = 2 * baseArea + basePerimeter * sideLength;
     }
@@ -417,7 +441,7 @@ function calcRightPrismVolume(sideLength, sideNumber, height) {
     }
 
     else {
-        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
+        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(Math.PI / sideNumber));
         volume = baseArea * height;
     }
 
@@ -430,7 +454,7 @@ function calcRightPrismSurfAr(sideLength, sideNumber, height) {
     }
 
     else {
-        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(PI / sideNumber));
+        let baseArea = (sideLength ** 2 * sideNumber) / (4 * Math.tan(Math.PI / sideNumber));
         let basePerimeter = sideLength * sideNumber;
         surfaceArea = 2 * baseArea + basePerimeter * height;
     }
